@@ -1,0 +1,975 @@
+[
+  {
+    "id": "01",
+    "file": "01_PlayerMovement",
+    "title": "第1回 プレイヤー移動だけの最小ゲーム",
+    "short": "Player Movement",
+    "goal": "完成形を見せたうえで、ボールを動かす最小構成を作る。",
+    "screenshot": "player",
+    "slideCount": 14,
+    "slides": [
+      {
+        "title": "完成形の提示",
+        "bullets": [
+          "最終的にはタイトル画面からゲームへ移動する",
+          "ボールを動かし、アイテムを集め、結果を表示する",
+          "6回かけて小さな機能を順番に足していく"
+        ],
+        "image": "titleFinal",
+        "layout": "cover"
+      },
+      {
+        "title": "今日作るもの",
+        "bullets": [
+          "ボールが入力で動く最小ゲーム",
+          "アイテム・タイマー・タイトルはまだ扱わない",
+          "「入力を読む」「力を加える」だけに集中する"
+        ],
+        "image": "player",
+        "layout": "image"
+      },
+      {
+        "title": "Unityの基本単位",
+        "bullets": [
+          "GameObject: 画面に置くもの",
+          "Component: GameObjectに付ける機能",
+          "Script: 自分で作るComponent"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "GameObject",
+          "Component",
+          "Script"
+        ]
+      },
+      {
+        "title": "最小シーン構成",
+        "bullets": [
+          "床、プレイヤー、カメラがあれば動きが確認できる",
+          "まずは見える・動く状態を優先する",
+          "UIやゲーム管理は後の回で追加する"
+        ],
+        "image": "overview",
+        "layout": "image"
+      },
+      {
+        "title": "Playerに必要な部品",
+        "bullets": [
+          "Sphere: 見た目",
+          "Rigidbody: 物理で動くための部品",
+          "PlayerController: 入力を読み、力を加える部品"
+        ],
+        "image": "player",
+        "layout": "image"
+      },
+      {
+        "title": "入力の考え方",
+        "bullets": [
+          "キーボード入力はVector2で受け取る",
+          "横方向をx、前後方向をyとして読む",
+          "3D空間ではxとzに変換する"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "Input Vector2",
+          "Vector3 movement",
+          "Rigidbody.AddForce"
+        ],
+        "code": "playerMove"
+      },
+      {
+        "title": "PlayerController v1",
+        "bullets": [
+          "移動に必要な変数を先に用意する",
+          "Startで部品を取得する",
+          "FixedUpdateで入力に応じて力を加える"
+        ],
+        "layout": "code",
+        "code": "playerFields"
+      },
+      {
+        "title": "変数の準備",
+        "bullets": [
+          "Speed: 調整したいのでpublic",
+          "rb: Rigidbodyを後で使うため保存",
+          "moveAction: 入力設定のMoveを保存"
+        ],
+        "layout": "code",
+        "code": "playerFields"
+      },
+      {
+        "title": "Start()",
+        "bullets": [
+          "ゲーム開始時に一度だけ呼ばれる",
+          "GetComponentで同じGameObjectのRigidbodyを取得",
+          "InputSystemからMoveアクションを探す"
+        ],
+        "layout": "code",
+        "code": "playerStart"
+      },
+      {
+        "title": "FixedUpdate()",
+        "bullets": [
+          "物理を使う処理はFixedUpdateに書く",
+          "入力を毎回読み取る",
+          "CanMoveは第5回で効いてくる停止スイッチ"
+        ],
+        "layout": "code",
+        "code": "playerMove"
+      },
+      {
+        "title": "入力を3D移動に変換",
+        "bullets": [
+          "input.xを横移動へ使う",
+          "input.yをz方向へ使う",
+          "y方向はジャンプではないので0にする"
+        ],
+        "layout": "code",
+        "code": "playerMove"
+      },
+      {
+        "title": "ボールを動かす",
+        "bullets": [
+          "AddForceでRigidbodyに力を加える",
+          "直接positionを書き換えない",
+          "物理らしい加速と減速が得られる"
+        ],
+        "layout": "code",
+        "code": "playerMove"
+      },
+      {
+        "title": "Inspectorで調整",
+        "bullets": [
+          "Speedを変えると体感が変わる",
+          "値を変えてすぐ確認できるのがpublic変数の利点",
+          "講義では5前後を基準にする"
+        ],
+        "image": "player",
+        "layout": "image"
+      },
+      {
+        "title": "今日の完成形",
+        "bullets": [
+          "ボールが入力で動く",
+          "プレイヤー移動の基本ができた",
+          "次回はカメラ追従とアイテム収集を追加する"
+        ],
+        "image": "gameplay",
+        "layout": "image"
+      }
+    ]
+  },
+  {
+    "id": "02",
+    "file": "02_CameraAndItems",
+    "title": "第2回 カメラ追従とアイテム収集",
+    "short": "Camera & Items",
+    "goal": "プレイヤーを見失わないカメラと、触れたら消えるアイテムを追加する。",
+    "screenshot": "items",
+    "slideCount": 14,
+    "slides": [
+      {
+        "title": "前回の状態",
+        "bullets": [
+          "ボールは入力で動く",
+          "ただしカメラは固定のまま",
+          "集める対象もまだない"
+        ],
+        "image": "player",
+        "layout": "image"
+      },
+      {
+        "title": "今日追加するもの",
+        "bullets": [
+          "カメラがプレイヤーを追う",
+          "アイテムに触れると消える",
+          "アイテムが回転・浮遊して見つけやすくなる"
+        ],
+        "image": "items",
+        "layout": "image"
+      },
+      {
+        "title": "カメラ追従の考え方",
+        "bullets": [
+          "最初の距離をoffsetとして保存する",
+          "毎フレーム、Player位置 + offsetへ移動する",
+          "プレイヤーの動きが終わった後に追従する"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "Camera",
+          "offset",
+          "Player"
+        ]
+      },
+      {
+        "title": "PlayerFollower",
+        "bullets": [
+          "Cameraに付けるスクリプト",
+          "PlayerTransformをInspectorで割り当てる",
+          "offsetを内部で保持する"
+        ],
+        "layout": "code",
+        "code": "followerFields"
+      },
+      {
+        "title": "Start()",
+        "bullets": [
+          "開始時の位置差を計算する",
+          "transform.positionは自分自身の位置",
+          "PlayerTransform.positionはプレイヤーの位置"
+        ],
+        "layout": "code",
+        "code": "followerStart"
+      },
+      {
+        "title": "LateUpdate()",
+        "bullets": [
+          "Updateの後に呼ばれる",
+          "プレイヤーの移動後にカメラを合わせる",
+          "カメラのガタつきを抑えやすい"
+        ],
+        "layout": "code",
+        "code": "followerLate"
+      },
+      {
+        "title": "Itemの構成",
+        "bullets": [
+          "ColliderをTriggerにする",
+          "TagをItemにする",
+          "見た目はPrefabにして複数配置する"
+        ],
+        "image": "items",
+        "layout": "image"
+      },
+      {
+        "title": "Tagの役割",
+        "bullets": [
+          "名前ではなくTagで種類を判定する",
+          "Itemタグなら収集対象",
+          "タグを使うと複数アイテムを同じ処理で扱える"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "Collider",
+          "CompareTag(\"Item\")",
+          "Destroy"
+        ]
+      },
+      {
+        "title": "OnTriggerEnter()",
+        "bullets": [
+          "Triggerに触れた瞬間に呼ばれる",
+          "otherは触れた相手",
+          "Itemなら処理を行う"
+        ],
+        "layout": "code",
+        "code": "playerTrigger"
+      },
+      {
+        "title": "CompareTag(\"Item\")",
+        "bullets": [
+          "条件分岐ifを使う",
+          "相手がItemかどうかを判定する",
+          "文字列の打ち間違いに注意する"
+        ],
+        "layout": "code",
+        "code": "playerTrigger"
+      },
+      {
+        "title": "Destroy()",
+        "bullets": [
+          "GameObjectをシーンから削除する",
+          "触れたアイテムだけが消える",
+          "収集できたことが画面でわかる"
+        ],
+        "layout": "code",
+        "code": "playerTrigger",
+        "image": "items"
+      },
+      {
+        "title": "ItemRotator",
+        "bullets": [
+          "アイテムを目立たせる演出用スクリプト",
+          "RotationSpeedで回転速度を調整",
+          "FloatAmplitudeとFloatFrequencyで上下移動を調整"
+        ],
+        "layout": "code",
+        "code": "itemFields"
+      },
+      {
+        "title": "回転と浮遊",
+        "bullets": [
+          "Rotateで毎フレーム少し回す",
+          "Mathf.Sinで上下に揺らす",
+          "Time.deltaTimeでフレーム差を吸収する"
+        ],
+        "layout": "code",
+        "code": "itemUpdate"
+      },
+      {
+        "title": "今日の完成形",
+        "bullets": [
+          "カメラがボールを追う",
+          "アイテムに触れると消える",
+          "次回は全部集めたらクリアにする"
+        ],
+        "image": "gameplay",
+        "layout": "image"
+      }
+    ]
+  },
+  {
+    "id": "03",
+    "file": "03_GameClear",
+    "title": "第3回 ゲームクリア判定",
+    "short": "Game Clear",
+    "goal": "全アイテム取得を判定し、クリア表示とプレイヤー停止まで作る。",
+    "screenshot": "gameplay",
+    "slideCount": 14,
+    "slides": [
+      {
+        "title": "前回の状態",
+        "bullets": [
+          "アイテムに触れると消える",
+          "ただし全て取っても何も起きない",
+          "ゲームの終わりを管理する係が必要"
+        ],
+        "image": "gameplay",
+        "layout": "image"
+      },
+      {
+        "title": "今日追加するもの",
+        "bullets": [
+          "残りアイテム数を確認する",
+          "0個ならゲームクリアにする",
+          "クリア表示とプレイヤー停止を行う"
+        ],
+        "image": "gameplay",
+        "layout": "image"
+      },
+      {
+        "title": "ゲーム全体を見る係",
+        "bullets": [
+          "PlayerControllerはプレイヤーだけを見る",
+          "InGameManagerはゲーム全体の流れを見る",
+          "役割を分けるとコードが追いやすい"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "PlayerController",
+          "InGameManager",
+          "UI / Items"
+        ]
+      },
+      {
+        "title": "UIの準備",
+        "bullets": [
+          "GameClearTextを画面に置く",
+          "最初は非表示にする",
+          "クリア時だけ表示する"
+        ],
+        "image": "gameplay",
+        "layout": "image"
+      },
+      {
+        "title": "Inspector参照",
+        "bullets": [
+          "ManagerからPlayerControllerを参照する",
+          "GameClearTextも参照する",
+          "public変数にドラッグ&ドロップで接続する"
+        ],
+        "layout": "code",
+        "code": "managerFields"
+      },
+      {
+        "title": "InGameManager.Start()",
+        "bullets": [
+          "最初にクリア表示を隠す",
+          "ゲーム開始状態へ切り替える",
+          "開始時の画面を整える"
+        ],
+        "layout": "code",
+        "code": "managerStart"
+      },
+      {
+        "title": "毎フレーム確認する",
+        "bullets": [
+          "プレイ中だけ確認する",
+          "FindGameObjectsWithTagでItemを集める",
+          "Lengthで個数を取る"
+        ],
+        "layout": "code",
+        "code": "managerUpdate"
+      },
+      {
+        "title": "Item数を数える",
+        "bullets": [
+          "Itemタグのオブジェクトを配列で受け取る",
+          "Lengthが残り個数になる",
+          "Destroyされると次の確認で数が減る"
+        ],
+        "layout": "code",
+        "code": "managerUpdate"
+      },
+      {
+        "title": "クリア条件",
+        "bullets": [
+          "if (itemCount == 0)",
+          "条件が成立したら状態を切り替える",
+          "条件分岐の実用例として扱う"
+        ],
+        "layout": "code",
+        "code": "managerUpdate"
+      },
+      {
+        "title": "クリア表示",
+        "bullets": [
+          "GameClearTextをSetActive(true)",
+          "プレイヤーを動けない状態にする",
+          "クリア後に余計な操作ができないようにする"
+        ],
+        "layout": "code",
+        "code": "managerClear"
+      },
+      {
+        "title": "プレイヤーを止める理由",
+        "bullets": [
+          "クリア後も動けると状態が曖昧になる",
+          "ゲーム終了時の操作を止める",
+          "見た目にも終了が分かりやすい"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "GameClear",
+          "CanMove = false",
+          "FreezePlayer"
+        ]
+      },
+      {
+        "title": "FreezePlayer()",
+        "bullets": [
+          "RigidbodyConstraints.FreezeAllを使う",
+          "位置と回転を固定する",
+          "ManagerからPlayerControllerの関数を呼ぶ"
+        ],
+        "layout": "code",
+        "code": "freeze"
+      },
+      {
+        "title": "ファイル間の呼び出し",
+        "bullets": [
+          "InGameManagerがPlayerController.FreezePlayerを呼ぶ",
+          "一方のスクリプトが全てを抱え込まない",
+          "参照が必要なものはInspectorで接続する"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "InGameManager",
+          "PlayerController",
+          "FreezePlayer()"
+        ]
+      },
+      {
+        "title": "今日の完成形",
+        "bullets": [
+          "全アイテム取得でクリア表示",
+          "プレイヤーが停止する",
+          "次回は時間計測・ゲームオーバー・リトライを追加する"
+        ],
+        "image": "gameplay",
+        "layout": "image"
+      }
+    ]
+  },
+  {
+    "id": "04",
+    "file": "04_TimerGameOverRetry",
+    "title": "第4回 タイマー・ゲームオーバー・リトライ",
+    "short": "Timer / GameOver / Retry",
+    "goal": "時間計測、落下ゲームオーバー、リトライボタンでゲームの失敗と再挑戦を作る。",
+    "screenshot": "gameOver",
+    "slideCount": 14,
+    "slides": [
+      {
+        "title": "前回の状態",
+        "bullets": [
+          "全部集めるとクリアできる",
+          "ただし時間は記録されない",
+          "落下しても失敗にならない"
+        ],
+        "image": "gameplay",
+        "layout": "image"
+      },
+      {
+        "title": "今日追加するもの",
+        "bullets": [
+          "タイマーで経過時間を表示する",
+          "落下したらゲームオーバーにする",
+          "Retryボタンでやり直す"
+        ],
+        "image": "gameOver",
+        "layout": "image"
+      },
+      {
+        "title": "TimerController",
+        "bullets": [
+          "時間だけを担当するスクリプト",
+          "Managerから開始・停止を指示する",
+          "表示用TextをInspectorで受け取る"
+        ],
+        "layout": "code",
+        "code": "timerFields"
+      },
+      {
+        "title": "タイマー変数",
+        "bullets": [
+          "CurrentTimeは結果表示にも使うのでpublic",
+          "isRunningで計測中かどうかを管理",
+          "TimerTextに表示する"
+        ],
+        "layout": "code",
+        "code": "timerFields"
+      },
+      {
+        "title": "StartTimer()",
+        "bullets": [
+          "CurrentTimeを0に戻す",
+          "isRunningをtrueにする",
+          "ゲーム開始時に呼ぶ"
+        ],
+        "layout": "code",
+        "code": "timerMethods"
+      },
+      {
+        "title": "StopTimer()",
+        "bullets": [
+          "isRunningをfalseにする",
+          "Updateでの加算が止まる",
+          "クリア時・ゲームオーバー時に呼ぶ"
+        ],
+        "layout": "code",
+        "code": "timerMethods"
+      },
+      {
+        "title": "Update()",
+        "bullets": [
+          "isRunningのときだけ実行する",
+          "Time.deltaTimeを加算する",
+          "Textに小数2桁で表示する"
+        ],
+        "layout": "code",
+        "code": "timerUpdate"
+      },
+      {
+        "title": "表示形式",
+        "bullets": [
+          "ToString(\"F2\")で小数2桁",
+          "$\"...\"で文字列に値を埋め込む",
+          "見やすいUI表示に整える"
+        ],
+        "layout": "code",
+        "code": "timerUpdate"
+      },
+      {
+        "title": "Managerに接続",
+        "bullets": [
+          "PlayingでStartTimerを呼ぶ",
+          "GameClearでStopTimerを呼ぶ",
+          "状態が変わるタイミングに処理を置く"
+        ],
+        "layout": "code",
+        "code": "managerPlaying"
+      },
+      {
+        "title": "結果表示",
+        "bullets": [
+          "クリア時のCurrentTimeを読む",
+          "ResultTextにTimeを表示する",
+          "ゲームの成果が残る"
+        ],
+        "layout": "code",
+        "code": "managerClear"
+      },
+      {
+        "title": "落下判定",
+        "bullets": [
+          "Playerのy座標を見る",
+          "-10未満なら落下とみなす",
+          "GameOver状態へ切り替える"
+        ],
+        "layout": "code",
+        "code": "managerUpdate"
+      },
+      {
+        "title": "GameOver表示",
+        "bullets": [
+          "CanMoveをfalseにする",
+          "Timerを止める",
+          "GameOverTextを表示する"
+        ],
+        "layout": "code",
+        "code": "managerOver"
+      },
+      {
+        "title": "RetryButton",
+        "bullets": [
+          "現在のシーンを読み直す",
+          "ButtonのOnClickから呼ぶ",
+          "最初の状態に戻して再挑戦できる"
+        ],
+        "layout": "code",
+        "code": "retry"
+      },
+      {
+        "title": "今日の完成形",
+        "bullets": [
+          "時間を測って結果表示できる",
+          "落下したらゲームオーバーになる",
+          "Retryでやり直せる"
+        ],
+        "image": "gameOver",
+        "layout": "image"
+      }
+    ]
+  },
+  {
+    "id": "05",
+    "file": "05_CountdownAndState",
+    "title": "第5回 カウントダウンと状態管理",
+    "short": "Countdown & State",
+    "goal": "開始前のカウントダウンとGameStateで、ゲームの流れを明確に制御する。",
+    "screenshot": "countdown",
+    "slideCount": 14,
+    "slides": [
+      {
+        "title": "前回の状態",
+        "bullets": [
+          "成功・失敗・リトライができる",
+          "ただし開始直後から動ける",
+          "開始前の準備時間がない"
+        ],
+        "image": "gameplay",
+        "layout": "image"
+      },
+      {
+        "title": "今日追加するもの",
+        "bullets": [
+          "3,2,1,Go!を表示する",
+          "カウント中はプレイヤーを動けなくする",
+          "GameStateで流れを整理する"
+        ],
+        "image": "countdown",
+        "layout": "image"
+      },
+      {
+        "title": "開始前に動ける問題",
+        "bullets": [
+          "プレイヤーが準備前に移動できる",
+          "タイマー開始とのズレが起きる",
+          "開始状態を明確に分ける必要がある"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "GameStart",
+          "Playing",
+          "GameClear / GameOver"
+        ]
+      },
+      {
+        "title": "CanMove",
+        "bullets": [
+          "falseならFixedUpdateをすぐ抜ける",
+          "trueになったら入力を読む",
+          "Managerがタイミングを決める"
+        ],
+        "layout": "code",
+        "code": "playerMove"
+      },
+      {
+        "title": "CountDownController",
+        "bullets": [
+          "表示だけを担当するスクリプト",
+          "CountDownTimeで秒数を設定する",
+          "CountDownTextに数字を表示する"
+        ],
+        "layout": "code",
+        "code": "countdownFields"
+      },
+      {
+        "title": "カウントダウン変数",
+        "bullets": [
+          "CountDownTimeは開始秒数",
+          "currentCountDownTimeは内部で減らす値",
+          "TextはInspectorで接続する"
+        ],
+        "layout": "code",
+        "code": "countdownFields"
+      },
+      {
+        "title": "コルーチンとは",
+        "bullets": [
+          "途中で待てる処理",
+          "yield returnで一時停止する",
+          "ゲーム全体は止めずに時間待ちできる"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "表示する",
+          "1秒待つ",
+          "減らす"
+        ]
+      },
+      {
+        "title": "StartCountDown()",
+        "bullets": [
+          "whileで0になるまで繰り返す",
+          "WaitForSeconds(1f)で1秒待つ",
+          "最後にGo!を表示して非表示にする"
+        ],
+        "layout": "code",
+        "code": "countdownMethod"
+      },
+      {
+        "title": "GameStart()",
+        "bullets": [
+          "CountDownControllerの処理が終わるまで待つ",
+          "終わったらPlayingへ切り替える",
+          "開始処理を1か所に集める"
+        ],
+        "layout": "code",
+        "code": "managerGameStart"
+      },
+      {
+        "title": "状態管理の必要性",
+        "bullets": [
+          "開始中、プレイ中、クリア、ゲームオーバーで処理が違う",
+          "今どの状態かを変数で持つ",
+          "状態ごとの処理をまとめる"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "GameStart",
+          "Playing",
+          "GameClear",
+          "GameOver"
+        ]
+      },
+      {
+        "title": "enum GameState",
+        "bullets": [
+          "状態名をまとめて定義する",
+          "文字列より間違いにくい",
+          "currentStateに現在の状態を保存する"
+        ],
+        "layout": "code",
+        "code": "managerEnum"
+      },
+      {
+        "title": "ChangeState()",
+        "bullets": [
+          "状態を更新する",
+          "switchで状態ごとの処理を分ける",
+          "開始・プレイ・終了処理の入口にする"
+        ],
+        "layout": "code",
+        "code": "managerPlaying"
+      },
+      {
+        "title": "switchで整理",
+        "bullets": [
+          "GameStartでカウントダウン開始",
+          "Playingで移動とタイマー開始",
+          "GameClear/GameOverで停止と表示"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "GameStart -> Countdown",
+          "Playing -> Move + Timer",
+          "End -> Stop + Show UI"
+        ]
+      },
+      {
+        "title": "今日の完成形",
+        "bullets": [
+          "開始前にカウントダウンする",
+          "Go!後に操作とタイマーが始まる",
+          "ゲームの状態が整理された"
+        ],
+        "image": "countdown",
+        "layout": "image"
+      }
+    ]
+  },
+  {
+    "id": "06",
+    "file": "06_TitleAndWrapUp",
+    "title": "第6回 タイトル画面と全体まとめ",
+    "short": "Title & Wrap-up",
+    "goal": "タイトル画面からInGameへ遷移し、6回で作った全スクリプトの関係を確認する。",
+    "screenshot": "titleFinal",
+    "slideCount": 14,
+    "slides": [
+      {
+        "title": "前回の状態",
+        "bullets": [
+          "InGameシーン内のゲームループは完成",
+          "開始、プレイ、クリア、ゲームオーバーが揃った",
+          "ただし入口となるタイトル画面がない"
+        ],
+        "image": "countdown",
+        "layout": "image"
+      },
+      {
+        "title": "今日追加するもの",
+        "bullets": [
+          "Titleシーンを用意する",
+          "StartボタンでInGameへ移動する",
+          "全スクリプトの役割を整理する"
+        ],
+        "image": "titleFinal",
+        "layout": "image"
+      },
+      {
+        "title": "シーンを分ける理由",
+        "bullets": [
+          "タイトル画面とゲーム本編は役割が違う",
+          "SceneManagerで画面を切り替える",
+          "小さな単位に分けると管理しやすい"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "Title Scene",
+          "Start Button",
+          "InGame Scene"
+        ]
+      },
+      {
+        "title": "Title.unity",
+        "bullets": [
+          "Canvasにタイトルとボタンを置く",
+          "StartButtonをTitleManagerに渡す",
+          "見た目と処理をつなぐ"
+        ],
+        "image": "titleScene",
+        "layout": "image"
+      },
+      {
+        "title": "Buttonの仕組み",
+        "bullets": [
+          "クリックされたときに関数を呼ぶ",
+          "OnClickに処理を登録する",
+          "コードからAddListenerで登録できる"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "Button Click",
+          "Listener",
+          "OnStartButtonClicked"
+        ]
+      },
+      {
+        "title": "TitleManager",
+        "bullets": [
+          "タイトル画面だけを担当する",
+          "StartButtonをInspectorで受け取る",
+          "押されたらInGameを読み込む"
+        ],
+        "layout": "code",
+        "code": "titleFields"
+      },
+      {
+        "title": "StartButton",
+        "bullets": [
+          "Button型の変数でUIボタンを参照する",
+          "Inspectorからドラッグ&ドロップする",
+          "Startでクリック時の処理を登録する"
+        ],
+        "layout": "code",
+        "code": "titleFields"
+      },
+      {
+        "title": "Start()",
+        "bullets": [
+          "AddListenerで押された時の関数を登録",
+          "関数名だけを渡す",
+          "ゲーム開始前の準備として一度だけ行う"
+        ],
+        "layout": "code",
+        "code": "titleStart"
+      },
+      {
+        "title": "OnStartButtonClicked()",
+        "bullets": [
+          "SceneManager.LoadSceneを使う",
+          "シーン名InGameを指定する",
+          "Build Settingsへの登録が必要"
+        ],
+        "layout": "code",
+        "code": "titleClick"
+      },
+      {
+        "title": "Build Settings",
+        "bullets": [
+          "TitleとInGameを登録する",
+          "タイトルからゲーム本編へ遷移できるようにする",
+          "シーン名の打ち間違いに注意する"
+        ],
+        "image": "titleFinal",
+        "layout": "image"
+      },
+      {
+        "title": "OnDestroy()",
+        "bullets": [
+          "登録したListenerを解除する",
+          "不要な参照が残ることを防ぐ",
+          "AddListenerとRemoveListenerをセットで見る"
+        ],
+        "layout": "code",
+        "code": "titleDestroy"
+      },
+      {
+        "title": "完成ゲームの流れ",
+        "bullets": [
+          "TitleでStartを押す",
+          "Countdown後にPlayingへ入る",
+          "ClearまたはGameOverで終了しRetryできる"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "Title",
+          "Countdown",
+          "Playing",
+          "Clear / GameOver",
+          "Retry"
+        ]
+      },
+      {
+        "title": "全スクリプト関係図",
+        "bullets": [
+          "PlayerController: 移動と収集",
+          "InGameManager: 状態管理",
+          "UI系Controller: 表示と入力の補助"
+        ],
+        "layout": "diagram",
+        "diagram": [
+          "TitleManager",
+          "InGameManager",
+          "PlayerController",
+          "Timer / Countdown / Retry",
+          "Follower / ItemRotator"
+        ]
+      },
+      {
+        "title": "6回のまとめ",
+        "bullets": [
+          "小さい機能を足して完成形に近づけた",
+          "既習のif/while/変数/配列をゲーム内で使った",
+          "次に学ぶクラス・参照・イベントの入口にもなった"
+        ],
+        "image": "titleFinal",
+        "layout": "image"
+      }
+    ]
+  }
+]

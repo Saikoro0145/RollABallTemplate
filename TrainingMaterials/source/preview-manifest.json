@@ -1,0 +1,11 @@
+{
+  "note": "These contact sheets are generated from the slide source data for quick review. They are not a PowerPoint/LibreOffice render of the saved PPTX.",
+  "outputs": [
+    "TrainingMaterials\\previews\\01_PlayerMovement_contact.png",
+    "TrainingMaterials\\previews\\02_CameraAndItems_contact.png",
+    "TrainingMaterials\\previews\\03_GameClear_contact.png",
+    "TrainingMaterials\\previews\\04_TimerGameOverRetry_contact.png",
+    "TrainingMaterials\\previews\\05_CountdownAndState_contact.png",
+    "TrainingMaterials\\previews\\06_TitleAndWrapUp_contact.png"
+  ]
+}

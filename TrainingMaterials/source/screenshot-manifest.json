@@ -1,0 +1,42 @@
+[
+  {
+    "key": "titleFinal",
+    "path": "Assets\\Screenshots\\training_title_play_game_view.png",
+    "exists": true
+  },
+  {
+    "key": "titleScene",
+    "path": "Assets\\Screenshots\\training_title_scene_view.png",
+    "exists": true
+  },
+  {
+    "key": "gameplay",
+    "path": "Assets\\Screenshots\\training_ingame_play_gameplay.png",
+    "exists": true
+  },
+  {
+    "key": "countdown",
+    "path": "Assets\\Screenshots\\training_ingame_play_countdown.png",
+    "exists": true
+  },
+  {
+    "key": "gameOver",
+    "path": "Assets\\Screenshots\\training_ingame_game_view.png",
+    "exists": true
+  },
+  {
+    "key": "overview",
+    "path": "Assets\\Screenshots\\training_ingame_scene_overview.png",
+    "exists": true
+  },
+  {
+    "key": "player",
+    "path": "Assets\\Screenshots\\training_player_focus.png",
+    "exists": true
+  },
+  {
+    "key": "items",
+    "path": "Assets\\Screenshots\\training_items_focus.png",
+    "exists": true
+  }
+]

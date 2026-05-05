@@ -18,15 +18,6 @@ public class CountDownController : MonoBehaviour
     public TMP_Text CountDownText;
 
     /// <summary>
-    /// ゲームオブジェクトが有効になったとき最初に一度だけ呼ばれるメソッド。
-    /// ここでは特に何もしていない（初期化は StartCountDown で行う）。
-    /// </summary>
-    private void Start()
-    {
-
-    }
-
-    /// <summary>
     /// カウントダウンを開始するコルーチン（IEnumerator）。
     /// コルーチンとは「途中で一時停止できる処理」のこと。
     /// yield return を使うことで、他の処理を止めずに指定時間だけ待機できる。
